@@ -174,7 +174,7 @@ def faster(relationsList, heightList, numNodes, fancy):
     autCount = 0
     elements = elementList(numNodes)
     autsArr = []
-    file = open('/Users/mikki/Desktop/posets/goodCode/testText.txt', 'w+')
+    file = open('ouput.txt', 'w+')
 
     for permDict in possibleMaps:
         permutation = []
