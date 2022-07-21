@@ -27,6 +27,7 @@ def automorphism():
         print('Enter a relation : 1 2')
         print()
 
+    # takes in the relations list
     relationsList = []
     n = int(input("Number of Relations : "))
     print()
@@ -35,6 +36,7 @@ def automorphism():
         relationsList.append(ele)
     print()
 
+    # takes in the number of nodes
     numNodes = int(input('How many nodes are in your poset? '))
 
     # check if poset is valid
@@ -42,6 +44,7 @@ def automorphism():
         print('Unfortunately that is not a valid poset. Please try again with a different set of relations')
         return
 
+    # generates the covers matrix that are used later
     myArr = leqMatrix(numNodes, relationsList)
 
     print()
@@ -73,6 +76,7 @@ def automorphism():
                 print('Nodes at a Height: 3')
                 print('Nodes at a Height: 4')
 
+            # takes in the height list for the faster algorithm
             print()
             heightList = []
             numHeight = int(input("Number of Heights : "))
@@ -84,6 +88,7 @@ def automorphism():
             print(heightList)
             print()
 
+            # runs the faster automorphism finder
             fancy = input('Enter F for fancy printing : ')
             if fancy == 'F' or fancy == 'f':
                 faster(relationsList, heightList, numNodes, True)
@@ -91,6 +96,7 @@ def automorphism():
                 faster(relationsList, heightList, numNodes, False)
         
         else:
+            # runs the slower automorphism finder
             print()
             fancy = input('Enter F for fancy printing : ')
             if fancy == 'F' or fancy == 'f':
@@ -120,6 +126,8 @@ def automorphism():
             print('Enter a mapping : b a')
             print()
             print('Make sure that you only enter integers')
+        
+        # takes in the mapping for the automorphism that the user wants to check
         mappingList = []
         numMap = int(input("Number of Mappings : "))
         print()
@@ -128,9 +136,11 @@ def automorphism():
             mappingList.append(mapping)
         print()
         perm = listToPerm(mappingList, numNodes)
-        # print(perm)
+
+        # runs the automorphism checker
         automorphismChecker(myArr, perm)
     else:
+        # if the user doesn't input an appropriate choice
         print('Invalid input :(')
 
 
@@ -180,10 +190,10 @@ def fancyAutomorphisms(myArr, fancy):
         parameters: myArr: an array representation of a matrix where less than/equal to relations
                             are represented by 1s by rows and non adjacent/ greater than relations
                             are 0s. (see the examples and the reference picture)
-                    fancy: boolean: true for fancy printing, false for regular printing
+                    fancy: boolean: true if the user wants fancy printing (printing out the automorphisms)
                             
-        output: automorphism counter: returns the number of automorphisms
-                permutations: prints the mappings as permutations
+        output: autCount: returns the number of automorphisms
+                autsArray: prints the mappings as permutations
                                 (eg 0 -> 1, 1 -> 0, 0 -> 0 would be [1, 0, 2])
     """
     
@@ -232,11 +242,19 @@ def fancyAutomorphisms(myArr, fancy):
 
 
 def faster(relationsList, heightList, numNodes, fancy):
-    """ heightList: list of lists. each sublist represents the nodes with the same height. even if a node is the only one of
-        that height include it. So a chain would be [[0], [1], [2]] and disjoint would be [[0, 1, 2]]
-        relationsList: a list of strictly less that relations. Lower element first. So a chain with 0 < 1 < 2 would be
-        [[0, 1], [1, 2]]
-        numNodes: the number of nodes
+    """ faster finds all of the automorphisms on an inputed poset.
+    parameters: heightList: list of lists. each sublist represents the nodes with the same height. even if a node is the only one of
+                that height include it. So a chain would be [[0], [1], [2]] and disjoint would be [[0, 1, 2]]
+
+                relationsList: a list of strictly less that relations. Lower element first. So a chain with 0 < 1 < 2 would be
+                [[0, 1], [1, 2]]
+
+                numNodes: the number of nodes
+
+                fancy: boolean: true if the user wants fancy printing (printing out the automorphisms)
+
+    output: autCount: an integer corresponding to the number of automorphisms
+            autsArray: an array of all of the automorphisms as permutations
     """
     myArr = leqMatrix(numNodes, relationsList)
     posetArr = np.array(myArr)
@@ -288,6 +306,14 @@ def faster(relationsList, heightList, numNodes, fancy):
 ###################
 
 def posetChecker(relationsList, numNodes):
+    """ posetChecker checks to see if an inputted relations list acutally corresponds to a poset
+        parameters: relationsList: a list of strictly less that relations. Lower element first. So a chain with 0 < 1 < 2 would be
+                    [[0, 1], [1, 2]]
+
+                    numNodes: the number of nodes
+        
+        output: boolean: true if the input is a poset
+    """
     poset = Poset(numNodes)
     for edges in relationsList:
         poset.addEdge(edges)
@@ -319,6 +345,13 @@ def permutationGroup(myArr):
     return permutations
 
 def fasterPerm(heightList):
+    """ fasterPerm finds all of the permutations of the nodes in a given poset but restricts it to possible posets based on preserving height
+
+        parameters: heightList: list of lists. each sublist represents the nodes with the same height. even if a node is the only one of
+                that height include it. So a chain would be [[0], [1], [2]] and disjoint would be [[0, 1, 2]]
+
+        output: permutations: a list of dictionary representations of the possible permutations
+    """
     lol = []
     for x in heightList:
         dictsList = []
@@ -361,7 +394,6 @@ def elementList(numNodes):
         elementsList += [start]
         start += 1
     return elementsList
-
 
 
 def defaultMatrix(numNodes):
@@ -444,7 +476,7 @@ def listToPerm (mappings, numNodes):
 ## Poset Checker Helper ##
 ##########################
 
-## adapts code from https://www.geeksforgeeks.org/detect-cycle-in-a-graph/ for the poset class
+## adapts code from https://www.geeksforgeeks.org/detect-cycle-in-a-graph/ for the isCyclic
 class Poset():
     def __init__(self, numNodes):
         """ constructor: creates a poset object
