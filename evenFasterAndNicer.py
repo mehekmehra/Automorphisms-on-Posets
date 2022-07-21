@@ -63,7 +63,7 @@ def automorphism():
             print('Enter the nodes at each height.')
 
             instructions  = input('Do you want instructions? Enter y for yes : ')
-            if instructions == 'y' or 'Y':
+            if instructions == 'y' or intstructions == 'Y':
                 print()
                 print('Enter the number of heights in your poset. Then, enter the number of nodes at each of these heights.')
                 print('If all of the nodes are dijoint, then enter them as being at the same height.')
@@ -85,10 +85,12 @@ def automorphism():
                 heightStr = input('Nodes at a Height : ')
                 nodesAtHeight = [int(x) for x in heightStr.split()]
                 heightList += [nodesAtHeight]
-            print(heightList)
+            # print(heightList)
             print()
 
             # runs the faster automorphism finder
+            print('Fancy printing prints out all of the automorphisms as mappings. This is not recommended for posets')
+            print('that might have a lot of automorphisms because there will be a lot of unnecessary printing.')
             fancy = input('Enter F for fancy printing : ')
             if fancy == 'F' or fancy == 'f':
                 faster(relationsList, heightList, numNodes, True)
@@ -98,6 +100,8 @@ def automorphism():
         else:
             # runs the slower automorphism finder
             print()
+            print('Fancy printing prints out all of the automorphisms as mappings. This is not recommended for posets')
+            print('that might have a lot of automorphisms because there will be a lot of unnecessary printing.')
             fancy = input('Enter F for fancy printing : ')
             if fancy == 'F' or fancy == 'f':
                 fancyAutomorphisms(myArr, True)
@@ -214,9 +218,14 @@ def fancyAutomorphisms(myArr, fancy):
         if (possiblePoset == posetArr).all():
             autCount += 1
             autsArr += [permutation]
-            if fancy == False:
-                print(permutation)
-
+            # if fancy == False:
+            #     print(permutation)
+    print()
+    print('This poset has ' + str(autCount) + ' automorphisms')
+    file.write('\n')
+    file.write('This poset has ' + str(autCount) + ' automorphisms')
+    file.write('\n')
+    print()
 
     if fancy == True:
         print('The automorphisms on this poset are :  \n')
@@ -230,8 +239,7 @@ def fancyAutomorphisms(myArr, fancy):
             print('\n')
             file.write('\n')
 
-    print('This poset has ' + str(autCount) + ' automorphisms')
-    file.write('This poset has ' + str(autCount) + ' automorphisms')
+    
     file.close()
     return autsArr, autCount
 
@@ -280,6 +288,13 @@ def faster(relationsList, heightList, numNodes, fancy):
         if (possiblePoset == posetArr).all():
             autCount += 1
             autsArr += [permutation]
+    
+    print()
+    print('This poset has ' + str(autCount) + ' automorphisms')
+    file.write('\n')
+    file.write('This poset has ' + str(autCount) + ' automorphisms')
+    file.write('\n')
+    print()
             
     if fancy is True:
         print('The automorphisms on this poset are :  \n')
@@ -294,8 +309,7 @@ def faster(relationsList, heightList, numNodes, fancy):
             print('\n')
             file.write('\n')
 
-    print('This poset has ' + str(autCount) + ' automorphisms')
-    file.write('This poset has ' + str(autCount) + ' automorphisms')
+    
     file.close()
 
     return  autCount, autsArr
@@ -373,8 +387,8 @@ def fasterPerm(heightList):
         for dict in x:
             combinedDict.update(dict)
         res += [combinedDict]
-    print(len(res))
-    print('')
+    # print(len(res))
+    # print('')
     return res
 
 
