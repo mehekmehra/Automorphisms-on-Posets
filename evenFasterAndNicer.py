@@ -1,4 +1,5 @@
 from itertools import permutations, product
+from sympy.combinatorics.named_groups import SymmetricGroup
 from collections import defaultdict
 import numpy as np
 
@@ -50,38 +51,52 @@ def automorphism():
     print()
     if choice == 'a' or choice == 'A':
         print()
-        print('Enter the nodes at each height.')
+        print('Do you want to use the (mostly) faster algorithm or the slower algorithm?')
+        print('The faster one is recommended for larger posets but requires more information')
+        fastChoice = input('Enter F for faster : ')
 
-        instructions  = input('Do you want instructions? Enter y for yes : ')
-        if instructions == 'y' or 'Y':
+        if fastChoice == 'f' or fastChoice == 'F':
             print()
-            print('Enter the number of heights in your poset. Then, enter the number of nodes at each of these heights.')
-            print('If all of the nodes are dijoint, then enter them as being at the same height.')
-            print('However, if there is a node disjoint from the rest of the poset (more than just single disjoint nodes,')
-            print('then the disjoint node would have its own height.')
-            print('For example, the poset defined as 0 < 1, 0 < 2, 1 < 3, 2 < 3 and a single disjoint node 4 would be entered as')
-            print('Number of Heights: 4')
-            print('Nodes at a Height: 0')
-            print('Nodes at a Height: 1 2')
-            print('Nodes at a Height: 3')
-            print('Nodes at a Height: 4')
+            print('Enter the nodes at each height.')
 
-        print()
-        heightList = []
-        numHeight = int(input("Number of Heights : "))
-        print()
-        for i in range(0, numHeight):
-            heightStr = input('Nodes at a Height : ')
-            nodesAtHeight = [int(x) for x in heightStr.split()]
-            heightList += [nodesAtHeight]
-        print(heightList)
-        print()
+            instructions  = input('Do you want instructions? Enter y for yes : ')
+            if instructions == 'y' or 'Y':
+                print()
+                print('Enter the number of heights in your poset. Then, enter the number of nodes at each of these heights.')
+                print('If all of the nodes are dijoint, then enter them as being at the same height.')
+                print('However, if there is a node disjoint from the rest of the poset (more than just single disjoint nodes,')
+                print('then the disjoint node would have its own height.')
+                print('For example, the poset defined as 0 < 1, 0 < 2, 1 < 3, 2 < 3 and a single disjoint node 4 would be entered as')
+                print('Number of Heights: 4')
+                print('Nodes at a Height: 0')
+                print('Nodes at a Height: 1 2')
+                print('Nodes at a Height: 3')
+                print('Nodes at a Height: 4')
 
-        fancy = input('Enter F for fancy printing : ')
-        if fancy == 'F' or fancy == 'f':
-            faster(relationsList, heightList, numNodes, True)
+            print()
+            heightList = []
+            numHeight = int(input("Number of Heights : "))
+            print()
+            for i in range(0, numHeight):
+                heightStr = input('Nodes at a Height : ')
+                nodesAtHeight = [int(x) for x in heightStr.split()]
+                heightList += [nodesAtHeight]
+            print(heightList)
+            print()
+
+            fancy = input('Enter F for fancy printing : ')
+            if fancy == 'F' or fancy == 'f':
+                faster(relationsList, heightList, numNodes, True)
+            else:
+                faster(relationsList, heightList, numNodes, False)
+        
         else:
-            faster(relationsList, heightList, numNodes, False)
+            print()
+            fancy = input('Enter F for fancy printing : ')
+            if fancy == 'F' or fancy == 'f':
+                fancyAutomorphisms(myArr, True)
+            else:
+                fancyAutomorphisms(myArr, False)
 
 
 
@@ -154,6 +169,61 @@ def automorphismChecker(myArr, autPermutation):
         print('Your input is not an automorphism on the given poset')
         return False
 
+#########################
+## AUTOMORPHISM FINDER ##
+#########################
+
+def fancyAutomorphisms(myArr, fancy):
+    """ automorphisms takes in an array representation of a matrix (less than matrix, similar to adjacency)
+        and returns the number of automorphisms and the mappings (as permutations)
+
+        parameters: myArr: an array representation of a matrix where less than/equal to relations
+                            are represented by 1s by rows and non adjacent/ greater than relations
+                            are 0s. (see the examples and the reference picture)
+                    fancy: boolean: true for fancy printing, false for regular printing
+                            
+        output: automorphism counter: returns the number of automorphisms
+                permutations: prints the mappings as permutations
+                                (eg 0 -> 1, 1 -> 0, 0 -> 0 would be [1, 0, 2])
+    """
+    
+    posetArr = np.array(myArr)
+    possibleMaps = permutationGroup(myArr)
+    autCount = 0
+    elements = elementList(len(myArr))
+    autsArr = []
+    file = open('ouput.txt', 'w+')
+
+    for permutation in possibleMaps:
+        possiblePoset = np.array(myArr)
+        # swap cols
+        possiblePoset[:] = possiblePoset[:, permutation]
+        # swap rows
+        possiblePoset[elements] = possiblePoset[permutation]
+
+        if (possiblePoset == posetArr).all():
+            autCount += 1
+            autsArr += [permutation]
+            if fancy == False:
+                print(permutation)
+
+
+    if fancy == True:
+        print('The automorphisms on this poset are :  \n')
+        file.write('The automorphisms on this poset are :  \n')
+        
+        for i in range(len(autsArr)):
+            print('f' + str(i) + ': \n')
+            for j in range(len(autsArr[i])):
+                print(str(j) + ' -> ' + str(autsArr[i][j]))
+                file.write(str(j) + ' -> ' + str(autsArr[i][j]) + '\n')
+            print('\n')
+            file.write('\n')
+
+    print('This poset has ' + str(autCount) + ' automorphisms')
+    file.write('This poset has ' + str(autCount) + ' automorphisms')
+    file.close()
+    return autsArr, autCount
 
 
 ###################
@@ -195,6 +265,7 @@ def faster(relationsList, heightList, numNodes, fancy):
             
     if fancy is True:
         print('The automorphisms on this poset are :  \n')
+        file.write('The automorphisms on this poset are :  \n')
 
         for i in range(len(autsArr)):
             print('f' + str(i) + ': \n')
@@ -232,6 +303,20 @@ def posetChecker(relationsList, numNodes):
 #############
 ## Helpers ##
 #############
+
+def permutationGroup(myArr):
+    """ permutationGroup outputs the permutation group for all of the nodes in a given poset matrix
+        primarily a helper function
+
+        parameters: myArr: an array representation of a matrix where less than/equal to relations
+                            are represented by 1s by rows and non adjacent/ greater than relations
+                            are 0s. (see the examples and the reference picture)
+
+        output: permutations: a list of the permutaions in the permutation group
+    """
+    generators = SymmetricGroup(len(myArr))
+    permutations = list(generators.generate_schreier_sims(af=True))
+    return permutations
 
 def fasterPerm(heightList):
     lol = []
@@ -276,6 +361,7 @@ def elementList(numNodes):
         elementsList += [start]
         start += 1
     return elementsList
+
 
 
 def defaultMatrix(numNodes):
