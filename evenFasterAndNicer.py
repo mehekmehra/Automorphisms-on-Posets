@@ -4,6 +4,8 @@ from collections import defaultdict
 import numpy as np
 
 
+# run automorphism() or directly use faster() or fancyAutomorphisms()
+
 ##################
 ## AUTOMORPHISM ##
 ##################
@@ -63,7 +65,7 @@ def automorphism():
             print('Enter the nodes at each height.')
 
             instructions  = input('Do you want instructions? Enter y for yes : ')
-            if instructions == 'y' or intstructions == 'Y':
+            if instructions == 'y' or instructions == 'Y':
                 print()
                 print('Enter the number of heights in your poset. Then, enter the number of nodes at each of these heights.')
                 print('If all of the nodes are dijoint, then enter them as being at the same height.')
@@ -208,9 +210,10 @@ def fancyAutomorphisms(myArr, fancy):
     autsArr = []
     file = open('ouput.txt', 'w+')
 
+    # loops through each bijection in the symmetric group
     for permutation in possibleMaps:
         possiblePoset = np.array(myArr)
-        # swap cols
+        # swap columns
         possiblePoset[:] = possiblePoset[:, permutation]
         # swap rows
         possiblePoset[elements] = possiblePoset[permutation]
@@ -354,8 +357,8 @@ def permutationGroup(myArr):
 
         output: permutations: a list of the permutaions in the permutation group
     """
-    generators = SymmetricGroup(len(myArr))
-    permutations = list(generators.generate_schreier_sims(af=True))
+    generators = SymmetricGroup(len(myArr)) # finds the generators of the symmetric group
+    permutations = list(generators.generate_schreier_sims(af=True)) # lists the elements of the symmetric group as cycles
     return permutations
 
 def fasterPerm(heightList):
@@ -490,7 +493,7 @@ def listToPerm (mappings, numNodes):
 ## Poset Checker Helper ##
 ##########################
 
-## adapts code from https://www.geeksforgeeks.org/detect-cycle-in-a-graph/ for the isCyclic
+
 class Poset():
     def __init__(self, numNodes):
         """ constructor: creates a poset object
@@ -510,26 +513,27 @@ class Poset():
 
         self.poset[lower].append(greater)
   
-    def isCyclicRecursion(self, node, visited, recStack):
-        visited[node] = True
-        recStack[node] = True
+    def isCyclicRecursion(self, node, stack, visitedNode):
+        visitedNode[node] = True
+        stack[node] = True
 
         for neighbour in self.poset[node]:
-            if visited[neighbour] == False:
-                if self.isCyclicRecursion(neighbour, visited, recStack) == True:
+            if visitedNode[neighbour] == False:
+                if self.isCyclicRecursion(neighbour, stack, visitedNode) == True:
                     return True
-            elif recStack[neighbour] == True:
+            elif stack[neighbour] == True:
                 return True
   
-        recStack[node] = False
+        stack[node] = False
         return False
   
+    # adapts code from https://www.geeksforgeeks.org/detect-cycle-in-a-graph/ for isCyclic and isCyclicRecursion
     def isCyclic(self):
-        visited = [False] * (self.N + 1)
-        recStack = [False] * (self.N + 1)
+        visitedNode = [False] * (self.N + 1)
+        stack = [False] * (self.N + 1)
         for node in range(self.N):
-            if visited[node] == False:
-                if self.isCyclicRecursion(node,visited,recStack) == True:
+            if visitedNode[node] == False:
+                if self.isCyclicRecursion(node, stack, visitedNode) == True:
                     return True
         return False
 
