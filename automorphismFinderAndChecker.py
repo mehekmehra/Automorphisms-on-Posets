@@ -312,7 +312,6 @@ def faster(relationsList, heightList, numNodes, fancy):
             print('\n')
             file.write('\n')
 
-    
     file.close()
 
     return  autCount, autsArr
