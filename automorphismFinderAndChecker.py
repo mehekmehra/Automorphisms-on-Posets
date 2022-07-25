@@ -87,7 +87,6 @@ def automorphism():
                 heightStr = input('Nodes at a Height : ')
                 nodesAtHeight = [int(x) for x in heightStr.split()]
                 heightList += [nodesAtHeight]
-            # print(heightList)
             print()
 
             # runs the faster automorphism finder
@@ -109,8 +108,6 @@ def automorphism():
                 fancyAutomorphisms(myArr, True)
             else:
                 fancyAutomorphisms(myArr, False)
-
-
 
     elif choice == 'b' or choice == 'B':
         instructions = input('Do you want instructions? Enter y for yes : ')
@@ -149,7 +146,6 @@ def automorphism():
         # if the user doesn't input an appropriate choice
         print('Invalid input :(')
 
-
 ##########################
 ## AUTOMORPHISM CHECKER ##
 ##########################
@@ -176,7 +172,6 @@ def automorphismChecker(myArr, autPermutation):
 
     possiblePoset[:] = possiblePoset[:, autPermutation]
     possiblePoset[elements] = possiblePoset[autPermutation]
-
 
     if (possiblePoset == posetArr).all():
         print('Your input is an automorphism on the given poset')
@@ -221,8 +216,7 @@ def fancyAutomorphisms(myArr, fancy):
         if (possiblePoset == posetArr).all():
             autCount += 1
             autsArr += [permutation]
-            # if fancy == False:
-            #     print(permutation)
+
     print()
     print('This poset has ' + str(autCount) + ' automorphisms')
     file.write('\n')
@@ -246,11 +240,9 @@ def fancyAutomorphisms(myArr, fancy):
     file.close()
     return autsArr, autCount
 
-
 ###################
 ## Faster Finder ##
 ###################
-
 
 def faster(relationsList, heightList, numNodes, fancy):
     """ faster finds all of the automorphisms on an inputed poset.
@@ -316,7 +308,6 @@ def faster(relationsList, heightList, numNodes, fancy):
 
     return  autCount, autsArr
 
-
 ###################
 ## Poset Checker ##
 ###################
@@ -340,7 +331,6 @@ def posetChecker(relationsList, numNodes):
         return True
     else:
         return False
-
 
 #############
 ## Helpers ##
@@ -373,13 +363,11 @@ def fasterPerm(heightList):
         dictsList = []
         unPerm = sorted(x)
         perms = list(permutations(unPerm))
-        # print(perms)
         
         for perm in perms:
             dictionary = {}
             for i in range(len(x)):
                 dictionary[unPerm[i]] = perm[i]
-                # print(dictionary)
             dictsList += [dictionary]
         lol += [dictsList]
     test = list(product(*lol))
@@ -389,8 +377,6 @@ def fasterPerm(heightList):
         for dict in x:
             combinedDict.update(dict)
         res += [combinedDict]
-    # print(len(res))
-    # print('')
     return res
 
 
