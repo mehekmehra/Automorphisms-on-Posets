@@ -652,3 +652,24 @@ def coversAreValid(relationsList):
 # print(faster(relationsList, heightList, numNodes))
 
 ## 14
+
+
+
+# presentation examples
+# Example 1
+# relationsList = [[0, 1], [0, 2], [1, 3], [2, 3]]
+# heightList = [[0], [1, 2], [3]]
+# numNodes = 4
+# faster(relationsList, heightList, numNodes, True)
+
+# Example 2
+# relationsList = [[0, 3], [1, 4], [2, 5], [0, 4], [1, 5], [2, 3]]
+# heightList = [[0, 1, 2], [3, 4, 5]]
+# numNodes = 6
+# faster(relationsList, heightList, numNodes, True)
+
+# Example 3
+# relationsList = [[0, 4], [4, 8], [1, 5], [5, 9], [2, 6], [6, 10], [3, 7], [7, 11], [0, 9], [1, 10], [2, 11], [3, 8]]
+# heightList = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]]
+# numNodes = 12
+# faster(relationsList, heightList, numNodes, True)
