@@ -497,7 +497,8 @@ class Poset():
         greater = edgePair[1]
 
         self.poset[lower].append(greater)
-  
+    
+    # adapts code from https://www.geeksforgeeks.org/detect-cycle-in-a-graph/ for isCyclic and isCyclicRecursion
     def isCyclicRecursion(self, node, stack, visitedNode):
         """ handles the recursion for isCyclic
 
