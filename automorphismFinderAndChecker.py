@@ -499,6 +499,14 @@ class Poset():
         self.poset[lower].append(greater)
   
     def isCyclicRecursion(self, node, stack, visitedNode):
+        """ handles the recursion for isCyclic
+
+            parameters: node: a starting node in the poset
+                        visitedNode: a list of whether or not the node corresponsing to that index has been visited
+                        stack: a stack of nodes
+            
+            outputs: a boolean corresponding to whether or not there is a cycle
+        """
         visitedNode[node] = True
         stack[node] = True
 
@@ -512,8 +520,10 @@ class Poset():
         stack[node] = False
         return False
   
-    # adapts code from https://www.geeksforgeeks.org/detect-cycle-in-a-graph/ for isCyclic and isCyclicRecursion
+    
     def isCyclic(self):
+        """ determines is there are any cycles in the given poset and returns a boolean.
+        """
         visitedNode = [False] * (self.N + 1)
         stack = [False] * (self.N + 1)
         for node in range(self.N):
@@ -554,7 +564,9 @@ def coversAreValid(relationsList):
                 return False
     return True
 
-
+################
+# sample calls #
+################
 
 # Z4
 # relationsList = [[0, 1], [1, 2], [3, 4], [4, 5], [6, 7], [7, 8], [9, 10], [10, 11], [0, 5], [3, 8], [6, 11], [9, 2]]
